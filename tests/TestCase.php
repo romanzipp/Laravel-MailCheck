@@ -25,8 +25,8 @@ abstract class TestCase extends BaseTestCase
      */
     protected function getEnvironmentSetUp($app)
     {
-        $app['config']->set('validator-pizza.store_checks', false);
-        $app['config']->set('validator-pizza.cache_checks', false);
+        $app['config']->set('mailcheck.store_checks', false);
+        $app['config']->set('mailcheck.cache_checks', false);
     }
 
     /**

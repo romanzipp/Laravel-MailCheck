@@ -31,6 +31,6 @@ class ValidatedDomain extends Model
     {
         parent::__construct($attributes);
 
-        $this->setTable(config('validator-pizza.checks_table'));
+        $this->setTable(config('mailcheck.checks_table'));
     }
 }

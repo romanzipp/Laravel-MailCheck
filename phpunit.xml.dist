@@ -11,7 +11,7 @@
          stopOnFailure="false"
 >
     <testsuites>
-        <testsuite name="Laravel Validator Pizza Test Suite">
+        <testsuite name="Laravel MailCheck Test Suite">
             <directory suffix="Test.php">./tests/</directory>
         </testsuite>
     </testsuites>

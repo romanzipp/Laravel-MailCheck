@@ -13,7 +13,7 @@ class CreateMailCheckTable extends Migration
      */
     public function up()
     {
-        $tableName = config('validator-pizza.checks_table');
+        $tableName = config('mailcheck.checks_table');
 
         Schema::create($tableName, function (Blueprint $table) {
             $table->increments('id');
@@ -38,7 +38,7 @@ class CreateMailCheckTable extends Migration
      */
     public function down()
     {
-        $tableName = config('validator-pizza.checks_table');
+        $tableName = config('mailcheck.checks_table');
 
         Schema::drop($tableName);
     }

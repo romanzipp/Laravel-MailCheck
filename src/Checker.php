@@ -59,15 +59,15 @@ class Checker
     public function __construct()
     {
         $this->client = new Client([
-            'base_uri' => 'https://www.validator.pizza',
+            'base_uri' => 'https://www.mailcheck.ai',
         ]);
 
-        $this->storeChecks = config('validator-pizza.store_checks');
-        $this->cacheChecks = config('validator-pizza.cache_checks');
-        $this->cacheDuration = config('validator-pizza.cache_duration');
-        $this->decisionRateLimit = config('validator-pizza.decision_rate_limit');
-        $this->decisionNoMx = config('validator-pizza.decision_no_mx');
-        $this->key = config('validator-pizza.key');
+        $this->storeChecks = config('mailcheck.store_checks');
+        $this->cacheChecks = config('mailcheck.cache_checks');
+        $this->cacheDuration = config('mailcheck.cache_duration');
+        $this->decisionRateLimit = config('mailcheck.decision_rate_limit');
+        $this->decisionNoMx = config('mailcheck.decision_no_mx');
+        $this->key = config('mailcheck.key');
     }
 
     /**
@@ -79,7 +79,7 @@ class Checker
      */
     public function allowedDomain(string $domain): bool
     {
-        $cacheKey = 'validator_pizza_' . $domain;
+        $cacheKey = 'mailcheck_' . $domain;
         $data = null;
 
         // Retreive from Cache if enabled

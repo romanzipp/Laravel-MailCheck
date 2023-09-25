@@ -34,7 +34,7 @@ class MailCheckProvider extends ServiceProvider
     public function register()
     {
         $this->mergeConfigFrom(
-            dirname(__DIR__) . '/../config/mailcheck.php', 'validator-pizza'
+            dirname(__DIR__) . '/../config/mailcheck.php', 'mailcheck'
         );
     }
 }

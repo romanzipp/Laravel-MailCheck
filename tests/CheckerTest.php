@@ -9,7 +9,7 @@ class CheckerTest extends TestCase
     /** @test **/
     public function theAllowedDomainFunctionReturnsTrueForAValidDomain()
     {
-        $checker = (new Checker())->allowedDomain('validator.pizza');
+        $checker = (new Checker())->allowedDomain('mailcheck.ai');
 
         $this->assertTrue($checker);
     }

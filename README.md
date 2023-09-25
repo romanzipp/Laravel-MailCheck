@@ -16,7 +16,7 @@ A Laravel Wrapper for the [MailCheck.ai](https://www.mailcheck.ai) disposable em
 ## Upgrading
 
 1. Update package name
-2. Update config file name from `config/validator-pizza.php` → `config/mailcheck.php`
+2. Update config file name from `config/mailcheck.php` → `config/mailcheck.php`
 
 ## Installation
 
@@ -36,34 +36,6 @@ Run the migration:
 
 ```
 php artisan migrate
-```
-
-Change the config to your desired settings:
-
-```php
-return [
-
-    // Database storage enabled
-    'store_checks' => true,
-
-    // Database table name
-    'checks_table' => 'validator_pizza',
-
-    // Cache enabled (recommended)
-    'cache_checks' => true,
-
-    // Duration in minutes to keep the query in cache
-    'cache_duration' => 30,
-
-    // Determine which decision should be given if the rate limit is exceeded [allow / deny]
-    'decision_rate_limit' => 'allow',
-
-    // Determine which decision should be given if the domain has no MX DNS record [allow / deny]
-    'decision_no_mx' => 'allow',
-
-    // Makes use of the API key
-    'key' => env('VALIDATOR_PIZZA_KEY'),
-];
 ```
 
 ## Usage
