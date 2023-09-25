@@ -13,7 +13,10 @@ A Laravel Wrapper for the [MailCheck.ai](https://www.mailcheck.ai) disposable em
 - Cache responses
 - Store requested domains in database
 
-## Migrating from Validator.Pizza
+## ✨ Migrating from Validator.Pizza
+
+<details>
+<summary>Migration Guide</summary>
 
 ###  **Package name**
 
@@ -53,6 +56,9 @@ The default new **table name** will be `mailcheck_checks`. If you want to keep t
 - validator_pizza
 + mailcheck_checks
 ```
+
+</details>
+
 
 ## Installation
 
