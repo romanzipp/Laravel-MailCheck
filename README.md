@@ -108,9 +108,47 @@ class HomeController extends Controller
 ```php
 $checker = new \romanzipp\MailCheck\Checker;
 
-// Validate Email
-$validEmail = $checker->allowedEmail('ich@ich.wtf');
-
-// Validate Domain
+// Validate domain
 $validDomain = $checker->allowedDomain('ich.wtf');
+
+// Validate mail address (uses domain check endpoint internally)
+$validEmail = $checker->allowedEmail('ich@ich.wtf');
+```
+
+## Advanced Usage
+
+You can make your disposable checks more ahrd or loose by configuring the edge case behavior.
+There are 3 possible outcomes to set: 
+
+- `romanzipp\MailCheck\Enums\ApiIssue::ALLOW` - allow the domain/mail
+- `romanzipp\MailCheck\Enums\ApiIssue::DENY` - deny the chekechecked domain/mail
+- `romanzipp\MailCheck\Enums\ApiIssue::EXCEPTION` - throw a [`DisposableMailException`](src/Exceptions/DisposableMailException)
+
+### Rate Limit exceeded
+
+```php
+return [
+    // ... 
+    'decision_rate_limit' => \romanzipp\MailCheck\Enums\ApiIssue::EXCEPTION,
+];
+```
+
+### No MX DNS records present
+
+There is no MX DNS entry present on the checked domain which means they can not receive any messages.
+
+```php
+return [
+    // ... 
+    'decision_no_mx' => \romanzipp\MailCheck\Enums\ApiIssue::EXCEPTION,
+];
+```
+
+### Invalid request
+
+```php
+return [
+    // ... 
+    'decision_invalid' => \romanzipp\MailCheck\Enums\ApiIssue::EXCEPTION,
+];
 ```
