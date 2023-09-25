@@ -15,7 +15,7 @@ return [
     'store_checks' => true,
 
     // Database table name
-    'checks_table' => 'validator_pizza',
+    'checks_table' => 'mailcheck_checks', // Previous: validator_pizza
 
     /*
     |--------------------------------------------------------------------------
@@ -48,5 +48,5 @@ return [
     'decision_no_mx' => 'allow',
 
     // Makes use of the API key
-    'key' => env('VALIDATOR_PIZZA_KEY'),
+    'key' => env('MAILCHECK_KEY'),
 ];

@@ -25,18 +25,18 @@
     },
     "autoload": {
         "psr-4": {
-            "romanzipp\\ValidatorPizza\\": "src/"
+            "romanzipp\\MailCheck\\": "src/"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "romanzipp\\ValidatorPizza\\Tests\\": "tests/"
+            "romanzipp\\MailCheck\\Tests\\": "tests/"
         }
     },
     "extra": {
         "laravel": {
             "providers": [
-                "romanzipp\\ValidatorPizza\\Providers\\ValidatorPizzaProvider"
+                "romanzipp\\MailCheck\\Providers\\MailCheckProvider"
             ]
         }
     },

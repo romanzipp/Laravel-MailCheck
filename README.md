@@ -1,22 +1,27 @@
-# Laravel Validator.Pizza
+# Laravel MailCheck.ai
 
-[![Latest Stable Version](https://img.shields.io/packagist/v/romanzipp/laravel-validator-pizza.svg?style=flat-square)](https://packagist.org/packages/romanzipp/laravel-validator-pizza)
-[![Total Downloads](https://img.shields.io/packagist/dt/romanzipp/laravel-validator-pizza.svg?style=flat-square)](https://packagist.org/packages/romanzipp/laravel-validator-pizza)
-[![License](https://img.shields.io/packagist/l/romanzipp/laravel-validator-pizza.svg?style=flat-square)](https://packagist.org/packages/romanzipp/laravel-validator-pizza)
-[![GitHub Build Status](https://img.shields.io/github/actions/workflow/status/romanzipp/Laravel-Validator-Pizza/tests.yml?label=tests&branch=master&style=flat-square)](https://github.com/romanzipp/Laravel-Validator-Pizza/actions)
+[![Latest Stable Version](https://img.shields.io/packagist/v/romanzipp/laravel-mailcheck.svg?style=flat-square)](https://packagist.org/packages/romanzipp/laravel-mailcheck)
+[![Total Downloads](https://img.shields.io/packagist/dt/romanzipp/laravel-mailcheck.svg?style=flat-square)](https://packagist.org/packages/romanzipp/laravel-mailcheck)
+[![License](https://img.shields.io/packagist/l/romanzipp/laravel-mailcheck.svg?style=flat-square)](https://packagist.org/packages/romanzipp/laravel-mailcheck)
+[![GitHub Build Status](https://img.shields.io/github/actions/workflow/status/romanzipp/Laravel-MailCheck/tests.yml?label=tests&branch=master&style=flat-square)](https://github.com/romanzipp/Laravel-MailCheck/actions)
 
-A Laravel Wrapper for the [Validator.pizza](https://www.validator.pizza) disposable email API made by [@tompec](https://github.com/tompec).
+A Laravel Wrapper for the [MailCheck.ai](https://www.mailcheck.ai) disposable email API made by [@tompec](https://github.com/tompec).
 
 ## Features
 
-- Query the Validator.Pizza API for disposable Emails & Domains
+- Query the [MailCheck.ai](https://www.mailcheck.ai) API for disposable Emails & Domains
 - Cache responses
 - Store requested domains in database
+
+## Upgrading
+
+1. Update package name
+2. Update config file name from `config/validator-pizza.php` → `config/mailcheck.php`
 
 ## Installation
 
 ```
-composer require romanzipp/laravel-validator-pizza
+composer require romanzipp/laravel-mailcheck
 ```
 
 ## Configuration
@@ -24,7 +29,7 @@ composer require romanzipp/laravel-validator-pizza
 Copy configuration to your project:
 
 ```
-php artisan vendor:publish --provider="romanzipp\ValidatorPizza\Providers\ValidatorPizzaProvider"
+php artisan vendor:publish --provider="romanzipp\MailCheck\Providers\MailCheckProvider"
 ```
 
 Run the migration:
@@ -75,7 +80,7 @@ class HomeController extends Controller
     public function handleEmail(Request $request)
     {
         $request->validate([
-            'email' => 'required|email|disposable_pizza',
+            'email' => 'required|email|disposable',
         ]);
 
         // ...
@@ -86,7 +91,7 @@ class HomeController extends Controller
 #### Standalone
 
 ```php
-$checker = new \romanzipp\ValidatorPizza\Checker;
+$checker = new \romanzipp\MailCheck\Checker;
 
 // Validate Email
 $validEmail = $checker->allowedEmail('ich@ich.wtf');

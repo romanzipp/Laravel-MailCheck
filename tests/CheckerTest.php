@@ -1,8 +1,8 @@
 <?php
 
-namespace romanzipp\ValidatorPizza\Tests;
+namespace romanzipp\MailCheck\Tests;
 
-use romanzipp\ValidatorPizza\Checker;
+use romanzipp\MailCheck\Checker;
 
 class CheckerTest extends TestCase
 {

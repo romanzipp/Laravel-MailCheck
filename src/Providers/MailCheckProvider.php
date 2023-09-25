@@ -1,12 +1,12 @@
 <?php
 
-namespace romanzipp\ValidatorPizza\Providers;
+namespace romanzipp\MailCheck\Providers;
 
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\ServiceProvider;
-use romanzipp\ValidatorPizza\Rules\DisposableEmailPizza as ValidatorRule;
+use romanzipp\MailCheck\Rules\DisposableEmail as ValidatorRule;
 
-class ValidatorPizzaProvider extends ServiceProvider
+class MailCheckProvider extends ServiceProvider
 {
     /**
      * Bootstrap the application services.
@@ -16,14 +16,14 @@ class ValidatorPizzaProvider extends ServiceProvider
     public function boot()
     {
         $this->publishes([
-            dirname(__DIR__) . '/../config/validator-pizza.php' => config_path('validator-pizza.php'),
+            dirname(__DIR__) . '/../config/mailcheck.php' => config_path('mailcheck.php'),
         ], 'config');
 
         $this->loadMigrationsFrom(
             dirname(__DIR__) . '/../migrations'
         );
 
-        Validator::extend('disposable_pizza', ValidatorRule::class . '@passes');
+        Validator::extend('disposable', ValidatorRule::class . '@passes');
     }
 
     /**
@@ -34,7 +34,7 @@ class ValidatorPizzaProvider extends ServiceProvider
     public function register()
     {
         $this->mergeConfigFrom(
-            dirname(__DIR__) . '/../config/validator-pizza.php', 'validator-pizza'
+            dirname(__DIR__) . '/../config/mailcheck.php', 'validator-pizza'
         );
     }
 }

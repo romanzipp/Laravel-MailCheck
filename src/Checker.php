@@ -1,13 +1,13 @@
 <?php
 
-namespace romanzipp\ValidatorPizza;
+namespace romanzipp\MailCheck;
 
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\RequestException;
 use GuzzleHttp\Psr7\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Cache;
-use romanzipp\ValidatorPizza\Models\ValidatedDomain;
+use romanzipp\MailCheck\Models\ValidatedDomain;
 
 class Checker
 {

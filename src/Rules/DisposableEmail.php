@@ -1,11 +1,11 @@
 <?php
 
-namespace romanzipp\ValidatorPizza\Rules;
+namespace romanzipp\MailCheck\Rules;
 
 use Illuminate\Contracts\Validation\Rule;
-use romanzipp\ValidatorPizza\Checker;
+use romanzipp\MailCheck\Checker;
 
-class DisposableEmailPizza implements Rule
+class DisposableEmail implements Rule
 {
     /**
      * Determine if the validation rule passes.

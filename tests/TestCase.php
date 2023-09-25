@@ -1,6 +1,6 @@
 <?php
 
-namespace romanzipp\ValidatorPizza\Tests;
+namespace romanzipp\MailCheck\Tests;
 
 use Orchestra\Testbench\TestCase as BaseTestCase;
 
@@ -42,7 +42,7 @@ abstract class TestCase extends BaseTestCase
     protected function getPackageProviders($app)
     {
         return [
-            \romanzipp\ValidatorPizza\Providers\ValidatorPizzaProvider::class,
+            \romanzipp\MailCheck\Providers\MailCheckProvider::class,
         ];
     }
 }

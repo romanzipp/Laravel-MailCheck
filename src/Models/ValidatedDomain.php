@@ -1,6 +1,6 @@
 <?php
 
-namespace romanzipp\ValidatorPizza\Models;
+namespace romanzipp\MailCheck\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
