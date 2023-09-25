@@ -1,6 +1,6 @@
 {
-    "name": "romanzipp/laravel-validator-pizza",
-    "description": "A Laravel Wrapper for the laravel.pizza disposable email API",
+    "name": "romanzipp/laravel-mailcheck",
+    "description": "A Laravel Wrapper for the MailCheck.ai disposable email API",
     "type": "library",
     "license": "MIT",
     "authors": [
