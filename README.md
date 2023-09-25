@@ -7,12 +7,6 @@
 
 A Laravel Wrapper for the [MailCheck.ai](https://www.mailcheck.ai) disposable email API made by [@tompec](https://github.com/tompec).
 
-## Features
-
-- Query the [MailCheck.ai](https://www.mailcheck.ai) API for disposable Emails & Domains
-- Cache responses
-- Store requested domains in database
-
 ## ✨ Migrating from Validator.Pizza
 
 This package was previously called "Validator.Pizza". See the following guide if you want to migrate your preivous installation.
@@ -61,6 +55,11 @@ The default new **table name** will be `mailcheck_checks`. If you want to keep t
 
 </details>
 
+## Features
+
+- Query the [MailCheck.ai](https://www.mailcheck.ai) API for disposable Emails & Domains
+- Cache responses
+- Store requested domains in database
 
 ## Installation
 
