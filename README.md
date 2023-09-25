@@ -12,7 +12,7 @@ A Laravel Wrapper for the [MailCheck.ai](https://www.mailcheck.ai) disposable em
 This package was previously called "Validator.Pizza". See the following guide if you want to migrate your preivous installation.
 
 <details>
-<summary>**Migration Guide**</summary>
+<summary>Migration Guide</summary>
 
 ###  **Package name**
 
