@@ -11,10 +11,8 @@ use romanzipp\MailCheck\Enums\ApiIssue;
 use romanzipp\MailCheck\Exceptions\DisposableMailException;
 use romanzipp\MailCheck\Models\ValidatedDomain;
 
-class Checker
+final class Checker
 {
-    public int $remaining = 0;
-
     private bool $shouldStoreChecks;
 
     private bool $shouldCacheChecks;
