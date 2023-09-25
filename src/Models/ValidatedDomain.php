@@ -10,18 +10,15 @@ use Illuminate\Database\Eloquent\Model;
  */
 class ValidatedDomain extends Model
 {
-    /**
-     * @var string[]
-     */
     protected $guarded = [];
 
     /**
-     * @var string[]
+     * @var array<string, string>
      */
-    protected $dates = [
-        'created_at',
-        'updated_at',
-        'last_queried',
+    protected $casts = [
+        'created_at' => 'datetime',
+        'updated_at' => 'datetime',
+        'last_queried' => 'datetime',
     ];
 
     /**

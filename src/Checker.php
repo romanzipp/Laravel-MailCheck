@@ -11,50 +11,23 @@ use romanzipp\MailCheck\Models\ValidatedDomain;
 
 class Checker
 {
-    /**
-     * @var int
-     */
-    public $remaining = 0;
+    public int $remaining = 0;
 
-    /**
-     * @var bool
-     */
-    public $fromCache;
+    public bool $fromCache;
 
-    /**
-     * @var bool
-     */
-    private $storeChecks;
+    private bool $storeChecks;
 
-    /**
-     * @var bool
-     */
-    private $cacheChecks;
+    private bool $cacheChecks;
 
-    /**
-     * @var int
-     */
-    private $cacheDuration;
+    private int $cacheDuration;
 
-    /**
-     * @var string
-     */
-    private $decisionRateLimit;
+    private string $decisionRateLimit;
 
-    /**
-     * @var string
-     */
-    private $decisionNoMx;
+    private string $decisionNoMx;
 
-    /**
-     * @var \GuzzleHttp\Client
-     */
-    private $client;
+    private Client $client;
 
-    /**
-     * @var string
-     */
-    private $key;
+    private string $key;
 
     public function __construct()
     {
@@ -100,7 +73,7 @@ class Checker
 
             // Rate limit exceeded
             if (429 == $response->status) {
-                return 'allow' == $this->decisionRateLimit ? true : false;
+                return 'allow' === $this->decisionRateLimit ? true : false;
             }
 
             if (200 != $response->status) {
@@ -187,7 +160,7 @@ class Checker
         $this->remaining = $data->remaining_requests ?? 0;
 
         if ($this->storeChecks) {
-            /** @var ValidatedDomain $check */
+            /** @var \romanzipp\MailCheck\Models\ValidatedDomain $check */
             $check = ValidatedDomain::query()->firstOrCreate(
                 [
                     'domain' => $data->domain,
