@@ -13,10 +13,18 @@ A Laravel Wrapper for the [MailCheck.ai](https://www.mailcheck.ai) disposable em
 - Cache responses
 - Store requested domains in database
 
-## Upgrading
+## Migrating from Validator.Pizza
 
-1. Update package name
-2. Update config file name from `config/mailcheck.php` → `config/mailcheck.php`
+1. Update **package name**    
+    `composer remove romanzipp/laravel-validator-pizza`    
+    `composer require romanzipp/laravel-mailcheck`
+2. Update **config file** name    
+    `config/mailcheck.php` → `config/mailcheck.php`
+3. Rename **code references**    
+    `romanzipp\ValidatorPizza\` → `romanzipp\MailCheck\`
+4. Rename **rule**    
+    `validator_pizza` → `disposable`
+5. The default new **table name** will be `mailcheck_checks`. If you want to keep the previous `validator_pizza` table name change the entry in your config file.
 
 ## Installation
 
