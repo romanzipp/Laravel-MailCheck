@@ -2,45 +2,73 @@
 
 namespace romanzipp\MailCheck;
 
-use GuzzleHttp\Client;
-use GuzzleHttp\Exception\RequestException;
-use GuzzleHttp\Psr7\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\DB;
+use romanzipp\MailCheck\Api\MailCheckApi;
+use romanzipp\MailCheck\Api\Responses\DomainResponse;
+use romanzipp\MailCheck\Enums\ApiIssue;
+use romanzipp\MailCheck\Exceptions\DisposableMailException;
 use romanzipp\MailCheck\Models\ValidatedDomain;
 
 class Checker
 {
     public int $remaining = 0;
 
-    public bool $fromCache;
+    private bool $shouldStoreChecks;
 
-    private bool $storeChecks;
-
-    private bool $cacheChecks;
+    private bool $shouldCacheChecks;
 
     private int $cacheDuration;
 
-    private string $decisionRateLimit;
+    public MailCheckApi $api;
 
-    private string $decisionNoMx;
+    // Fallbacks
 
-    private Client $client;
+    private ApiIssue $decisionRateLimit;
 
-    private string $key;
+    private ApiIssue $decisionNoMx;
+
+    private ApiIssue $decisionInvalid;
 
     public function __construct()
     {
-        $this->client = new Client([
-            'base_uri' => 'https://www.mailcheck.ai',
-        ]);
+        $this->api = new MailCheckApi(
+            key: config('mailcheck.key')
+        );
 
-        $this->storeChecks = config('mailcheck.store_checks');
-        $this->cacheChecks = config('mailcheck.cache_checks');
+        $this->shouldStoreChecks = config('mailcheck.store_checks');
+        $this->shouldCacheChecks = config('mailcheck.cache_checks');
         $this->cacheDuration = config('mailcheck.cache_duration');
-        $this->decisionRateLimit = config('mailcheck.decision_rate_limit');
-        $this->decisionNoMx = config('mailcheck.decision_no_mx');
-        $this->key = config('mailcheck.key');
+
+        $this->decisionRateLimit = config('mailcheck.decision_rate_limit') ?? ApiIssue::EXCEPTION;
+        $this->decisionNoMx = config('mailcheck.decision_no_mx') ?? ApiIssue::EXCEPTION;
+        $this->decisionInvalid = config('mailcheck.decision_invalid') ?? ApiIssue::EXCEPTION;
+    }
+
+    private function decideOnIssue(DomainResponse $response): bool
+    {
+        if (false === $response->mx) {
+            return match ($this->decisionNoMx) {
+                ApiIssue::ALLOW => true,
+                ApiIssue::DENY => false,
+                ApiIssue::EXCEPTION => throw new DisposableMailException('MX entry invalid')
+            };
+        }
+
+        if ($response->inRateLimit()) {
+            return match ($this->decisionRateLimit) {
+                ApiIssue::ALLOW => true,
+                ApiIssue::DENY => false,
+                ApiIssue::EXCEPTION => throw new DisposableMailException('Rate Limit exceeded')
+            };
+        }
+
+        return match ($this->decisionInvalid) {
+            ApiIssue::ALLOW => true,
+            ApiIssue::DENY => false,
+            ApiIssue::EXCEPTION => throw new DisposableMailException('Invalid request')
+        };
     }
 
     /**
@@ -48,60 +76,53 @@ class Checker
      *
      * @param string $domain
      *
+     * @throws \romanzipp\MailCheck\Exceptions\DisposableMailException
+     *
      * @return bool
      */
     public function allowedDomain(string $domain): bool
     {
-        $cacheKey = 'mailcheck_' . $domain;
-        $data = null;
+        $cacheKey = "mailcheck_$domain";
 
         // Retreive from Cache if enabled
 
-        if ($this->cacheChecks && Cache::has($cacheKey)) {
-            $data = Cache::get($cacheKey);
-
-            $this->fromCache = true;
+        if ($this->shouldCacheChecks && Cache::has($cacheKey)) {
+            return (bool) Cache::get($cacheKey);
         }
 
-        if ( ! $this->fromCache) {
-            $response = $this->query($domain);
+        // Query API since we don't have a cacgcached response
+        $response = $this->api->domain($domain);
 
-            // The email address is invalid
-            if (400 == $response->status) {
-                return false;
-            }
-
-            // Rate limit exceeded
-            if (429 == $response->status) {
-                return 'allow' === $this->decisionRateLimit ? true : false;
-            }
-
-            if (200 != $response->status) {
-                return false;
-            }
-
-            $data = $response;
+        if ($response->hasIssue()) {
+            return $this->decideOnIssue($response);
         }
+
+        $isAllowed = ! $response->disposable;
 
         // Store in Cache if enabled
 
-        if ($this->cacheChecks && ! $this->fromCache) {
-            Cache::put($cacheKey, $data, $this->cacheDuration);
+        if ($this->shouldCacheChecks) {
+            Cache::put($cacheKey, $isAllowed, $this->cacheDuration);
         }
 
         // Store in Database or update Database query hits
-
-        if ($this->storeChecks) {
-            $this->storeResponse($data);
+        if ($this->shouldStoreChecks) {
+            $this->storeResponse(
+                domain: $domain,
+                disposable: ! $isAllowed,
+                mx: $response->mx
+            );
         }
 
-        return $this->decideIsValid($data);
+        return $isAllowed;
     }
 
     /**
      * Check email address.
      *
      * @param string $email
+     *
+     * @throws \romanzipp\MailCheck\Exceptions\DisposableMailException
      *
      * @return bool
      */
@@ -116,83 +137,21 @@ class Checker
         return $this->allowedDomain($domain);
     }
 
-    /**
-     * Query the API.
-     *
-     * @param string $domain
-     *
-     * @throws \GuzzleHttp\Exception\ClientException
-     *
-     * @return \stdClass API response data
-     */
-    private function query(string $domain): \stdClass
+    private function storeResponse(string $domain, bool $disposable, bool $mx): void
     {
-        $uri = '/domain/' . strtolower($domain);
-
-        if ($this->key) {
-            $uri .= '?key=' . $this->key;
+        if ( ! $this->shouldStoreChecks) {
+            return;
         }
 
-        $request = new Request('GET', $uri, [
-            'Accept' => 'application/json',
-        ]);
-
-        try {
-            $response = $this->client->send($request);
-        } catch (RequestException $e) {
-            return (object) [
-                'status' => $e->getResponse()->getStatusCode(),
-            ];
-        }
-
-        $data = json_decode($response->getBody());
-
-        return (object) [
-            'status' => 200,
-            'domain' => $data->domain,
-            'mx' => optional($data)->mx ?? false,
-            'disposable' => optional($data)->disposable ?? false,
-        ];
-    }
-
-    private function storeResponse(\stdClass $data): void
-    {
-        $this->remaining = $data->remaining_requests ?? 0;
-
-        if ($this->storeChecks) {
-            /** @var \romanzipp\MailCheck\Models\ValidatedDomain $check */
-            $check = ValidatedDomain::query()->firstOrCreate(
-                [
-                    'domain' => $data->domain,
-                ], [
-                    'mx' => $data->mx,
-                    'disposable' => $data->disposable,
-                    'last_queried' => Carbon::now(),
-                ]
-            );
-
-            if ( ! $check->wasRecentlyCreated) {
-                ++$check->hits;
-                $check->last_queried = Carbon::now();
-
-                $check->save();
-            }
-        }
-    }
-
-    /**
-     * Decide wether the given data represents a valid domain.
-     *
-     * @param \stdClass $data
-     *
-     * @return bool
-     */
-    private function decideIsValid(\stdClass $data): bool
-    {
-        if ('deny' == $this->decisionNoMx && true !== optional($data)->mx) {
-            return false;
-        }
-
-        return false === optional($data)->disposable;
+        ValidatedDomain::query()->firstOrCreate(
+            [
+                'domain' => $domain,
+            ], [
+                'mx' => $mx,
+                'disposable' => $disposable,
+                'last_queried' => Carbon::now(),
+                'hits' => DB::raw('hits + 1'),
+            ]
+        );
     }
 }

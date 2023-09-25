@@ -2,7 +2,11 @@
 
 namespace romanzipp\MailCheck\Tests;
 
+use GuzzleHttp\Client;
+use GuzzleHttp\Handler\MockHandler;
 use Orchestra\Testbench\TestCase as BaseTestCase;
+use romanzipp\MailCheck\Api\MailCheckApi;
+use romanzipp\MailCheck\Checker;
 
 abstract class TestCase extends BaseTestCase
 {
@@ -44,5 +48,16 @@ abstract class TestCase extends BaseTestCase
         return [
             \romanzipp\MailCheck\Providers\MailCheckProvider::class,
         ];
+    }
+
+    protected function mockChecker($responses): Checker
+    {
+        $checker = new Checker();
+        $checker->api = new MailCheckApi();
+        $checker->api->client = new Client([
+            'handler' => new MockHandler($responses),
+        ]);
+
+        return $checker;
     }
 }

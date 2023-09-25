@@ -14,8 +14,8 @@ return [
     // Database storage enabled
     'store_checks' => true,
 
-    // Database table name
-    'checks_table' => 'mailcheck_checks', // Previous: validator_pizza
+    // Database table name (previously: validator_pizza)
+    'checks_table' => 'mailcheck_checks',
 
     /*
     |--------------------------------------------------------------------------
@@ -39,13 +39,21 @@ return [
     |
     | Advanced configuration
     |
+    | Available decision types:
+    |   romanzipp\MailCheck\Enums\ApiIssue::ALLOW
+    |   romanzipp\MailCheck\Enums\ApiIssue::DENY
+    |   romanzipp\MailCheck\Enums\ApiIssue::EXCEPTION
+    |
     */
 
-    // Determine which decision should be given if the rate limit is exceeded [allow / deny]
-    'decision_rate_limit' => 'allow',
+    // Configure what should happen if the Rate Limit is exceeded
+    'decision_rate_limit' => \romanzipp\MailCheck\Enums\ApiIssue::EXCEPTION,
 
-    // Determine which decision should be given if the domain has no MX DNS record [allow / deny]
-    'decision_no_mx' => 'allow',
+    // Configure what should happen if the domain has no valid MX DNS entries
+    'decision_no_mx' => \romanzipp\MailCheck\Enums\ApiIssue::EXCEPTION,
+
+    // Configure what should happen if the request is invalid for another reason
+    'decision_invalid' => \romanzipp\MailCheck\Enums\ApiIssue::EXCEPTION,
 
     // Makes use of the API key
     'key' => env('MAILCHECK_KEY'),
