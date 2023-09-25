@@ -6,6 +6,7 @@ use GuzzleHttp\Exception\ClientException;
 use GuzzleHttp\Psr7\Request;
 use GuzzleHttp\Psr7\Response;
 use Illuminate\Support\Facades\Cache;
+use romanzipp\MailCheck\Enums\ApiIssue;
 use romanzipp\MailCheck\Exceptions\DisposableMailException;
 
 class CacheTest extends TestCase
@@ -58,7 +59,10 @@ class CacheTest extends TestCase
         $this->expectException(DisposableMailException::class);
         $this->expectExceptionMessage('Invalid request');
 
-        config(['mailcheck.cache_checks' => false]);
+        config([
+            'mailcheck.cache_checks' => false,
+            'mailcheck.decision_invalid' => ApiIssue::EXCEPTION,
+        ]);
 
         $checker = $this->mockChecker([
             new Response(200, [], json_encode(['status' => 200, 'domain' => 'mailcheck.ai', 'mx' => true, 'disposable' => false, 'did_you_mean' => null])),

@@ -50,10 +50,10 @@ return [
     'decision_rate_limit' => \romanzipp\MailCheck\Enums\ApiIssue::EXCEPTION,
 
     // Configure what should happen if the domain has no valid MX DNS entries
-    'decision_no_mx' => \romanzipp\MailCheck\Enums\ApiIssue::EXCEPTION,
+    'decision_no_mx' => \romanzipp\MailCheck\Enums\ApiIssue::DENY,
 
     // Configure what should happen if the request is invalid for another reason
-    'decision_invalid' => \romanzipp\MailCheck\Enums\ApiIssue::EXCEPTION,
+    'decision_invalid' => \romanzipp\MailCheck\Enums\ApiIssue::DENY,
 
     // Makes use of the API key
     'key' => env('MAILCHECK_KEY'),
