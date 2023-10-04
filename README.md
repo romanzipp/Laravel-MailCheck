@@ -117,7 +117,7 @@ $validEmail = $checker->allowedEmail('ich@ich.wtf');
 
 ## Advanced Usage
 
-You can make your disposable checks more ahrd or loose by configuring the edge case behavior.
+You can make your disposable checks more hard or loose by configuring the edge case behavior.
 There are 3 possible outcomes to set: 
 
 - `romanzipp\MailCheck\Enums\ApiIssue::ALLOW` - allow the domain/mail
