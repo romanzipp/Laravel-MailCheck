@@ -9,7 +9,7 @@ class DomainResponse
         public ?string $domain = null,
         public ?bool $mx = null,
         public ?bool $disposable = null,
-        public ?string $did_you_mean = null
+        public ?string $did_you_mean = null,
     ) {
     }
 
