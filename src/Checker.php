@@ -50,7 +50,7 @@ final class Checker
             return match ($this->decisionNoMx) {
                 ApiIssue::ALLOW => true,
                 ApiIssue::DENY => false,
-                ApiIssue::EXCEPTION => throw new DisposableMailException('MX entry invalid')
+                ApiIssue::EXCEPTION => throw new DisposableMailException('MX entry invalid'),
             };
         }
 
@@ -58,14 +58,14 @@ final class Checker
             return match ($this->decisionRateLimit) {
                 ApiIssue::ALLOW => true,
                 ApiIssue::DENY => false,
-                ApiIssue::EXCEPTION => throw new DisposableMailException('Rate Limit exceeded')
+                ApiIssue::EXCEPTION => throw new DisposableMailException('Rate Limit exceeded'),
             };
         }
 
         return match ($this->decisionInvalid) {
             ApiIssue::ALLOW => true,
             ApiIssue::DENY => false,
-            ApiIssue::EXCEPTION => throw new DisposableMailException('Invalid request')
+            ApiIssue::EXCEPTION => throw new DisposableMailException('Invalid request'),
         };
     }
 

@@ -11,7 +11,7 @@ class MailCheckApi
     public Client $client;
 
     public function __construct(
-        string $key = null
+        ?string $key = null,
     ) {
         $this->client = new Client([
             'base_uri' => 'https://api.mailcheck.ai/',
